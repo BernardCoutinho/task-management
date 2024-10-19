@@ -1,44 +1,120 @@
-import { Component } from '@angular/core';
-import { MockApiService } from '../../services/mock-api.service';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Task } from '../../models/task.model';
+
+export interface Task {
+  title: string;
+  description: string;
+  completed: boolean;
+}
 
 @Component({
   standalone: true,
   selector: 'app-todo-list',
-  imports: [FormsModule, CommonModule],
   templateUrl: './todo-list.component.html',
-  styles: [`.completed { text-decoration: line-through; }`]
+  styleUrls: ['./todo-list.component.scss'],
+  imports: [ReactiveFormsModule, CommonModule]
 })
-export class TodoListComponent {
+export class TodoListComponent implements OnInit {
   tasks: Task[] = [];
-  currentTask = { title: '', description: '', completed: false };
-  isEditing = false;
+  paginatedTasks: Task[] = [];
+  currentPage = 1;
+  itemsPerPage = 5;
+  totalPages = 1;
+  isModalOpen = false;
+  isEditMode = false; // Para controlar se o modal está em modo de edição
+  taskBeingEdited: Task | null = null; // Para manter a referência da tarefa que está sendo editada
 
-  constructor(private apiService: MockApiService) {
-    this.tasks = this.apiService.getTasks(); 
+  // Formulário para adicionar/editar tarefas no modal
+  modalForm!: FormGroup;
+
+  ngOnInit() {
+    this.modalForm = new FormGroup({
+      taskTitle: new FormControl('', [Validators.required]),
+      taskDescription: new FormControl('', [Validators.required]),
+    });
+
+    this.updatePagination();
   }
 
+  // Abre o modal para adição de tarefa
+  openModal() {
+    this.isEditMode = false; // Não estamos editando uma tarefa
+    this.modalForm.reset();
+    this.isModalOpen = true;
+  }
+
+  // Fecha o modal
+  closeModal() {
+    this.isModalOpen = false;
+  }
+
+  // Adiciona uma nova tarefa ou salva a edição
   addTask() {
-    const newTask: Task = { title: 'Nova Tarefa', description: 'Descrição da tarefa', completed: false };
-    this.tasks.push(newTask);
+    if (this.modalForm.valid) {
+      const newTaskTitle = this.modalForm.get('taskTitle')?.value;
+      const newTaskDescription = this.modalForm.get('taskDescription')?.value;
+
+      if (this.isEditMode && this.taskBeingEdited) {
+        // Se estamos no modo de edição, apenas atualizamos a tarefa
+        this.taskBeingEdited.title = newTaskTitle;
+        this.taskBeingEdited.description = newTaskDescription;
+        this.taskBeingEdited = null;
+      } else {
+        // Se não estamos editando, é uma nova tarefa
+        this.tasks.push({ title: newTaskTitle, description: newTaskDescription, completed: false });
+      }
+
+      this.modalForm.reset();
+      this.closeModal();
+      this.updatePagination();
+    }
   }
 
-  toggleComplete(task: Task) {
+  // Função de edição da tarefa
+  editTask(task: Task) {
+    this.isEditMode = true; // Estamos em modo de edição
+    this.taskBeingEdited = task; // Definimos a tarefa que está sendo editada
+
+    // Preenche o modal com os valores da tarefa existente
+    this.modalForm.setValue({
+      taskTitle: task.title,
+      taskDescription: task.description
+    });
+
+    this.isModalOpen = true; // Abre o modal para edição
+  }
+
+  // Paginação
+  updatePagination() {
+    this.totalPages = Math.ceil(this.tasks.length / this.itemsPerPage);
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    this.paginatedTasks = this.tasks.slice(start, end);
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePagination();
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePagination();
+    }
+  }
+
+  // Completar tarefa
+  completeTask(task: Task) {
     task.completed = !task.completed;
   }
 
-  editTask(task: Task) {
-    this.isEditing = true;
-    this.currentTask = { ...task };
-  }
-
-  saveTask() {
-    this.isEditing = false;
-  }
-
+  // Remover tarefa
   removeTask(task: Task) {
     this.tasks = this.tasks.filter(t => t !== task);
+    this.updatePagination();
   }
 }
