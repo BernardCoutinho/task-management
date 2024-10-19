@@ -1,0 +1,16 @@
+<h1>Lista de Tarefas</h1>
+<button (click)="addTask()">Adicionar Tarefa</button>
+<ul>
+  <li *ngFor="let task of tasks">
+    <span [class.completed]="task.completed">{{ task.title }}: {{ task.description }}</span>
+    <button (click)="toggleComplete(task)">Concluir</button>
+    <button (click)="editTask(task)">Editar</button>
+    <button (click)="removeTask(task)">Remover</button>
+  </li>
+</ul>
+
+<form *ngIf="isEditing" (submit)="saveTask()">
+  <input [(ngModel)]="currentTask.title" placeholder="Título" name="title">
+  <input [(ngModel)]="currentTask.description" placeholder="Descrição" name="description">
+  <button type="submit">Salvar</button>
+</form>

@@ -1,0 +1,40 @@
+<div class="login-container">
+    <div class="login-box card p-4">
+      <h2 class="text-center mb-4">Login</h2>
+  
+      <!-- Formulário de login com formGroup -->
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+        <div class="form-group mb-3">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Usuário"
+            formControlName="username"
+          />
+          <!-- Exibir erro de validação se o campo for inválido -->
+          <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="text-danger">
+            O campo usuário é obrigatório
+          </div>
+        </div>
+        <div class="form-group mb-4">
+          <input
+            type="password"
+            class="form-control"
+            placeholder="Senha"
+            formControlName="password"
+          />
+          <!-- Exibir erro de validação se o campo for inválido -->
+          <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger">
+            O campo senha é obrigatório
+          </div>
+        </div>
+        
+        <!-- Botão de login -->
+        <button type="submit" class="btn btn-primary w-100 mb-2">Entrar</button>
+        
+        <!-- Botão de registro -->
+        <button type="button" class="btn btn-secondary w-100" (click)="navigateToRegister()">Registrar</button>
+      </form>
+    </div>
+  </div>
+  
