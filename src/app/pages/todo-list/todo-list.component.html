@@ -1,21 +1,15 @@
 <div class="todo-container">
   <div class="todo-box ali">
     <h2>Lista de Tarefas</h2>
- 
-    <!-- Botão para abrir o modal de adição de tarefa -->
-    <button class="btn btn-add-task" (click)="openModal()">Adicionar Nova Tarefa</button>
+
+    <button class="btn btn-add-task" (click)="openModal(taskModal)">Adicionar Nova Tarefa</button>
 
     <!-- Exibir mensagem se não houver tarefas -->
     <p *ngIf="tasks.length === 0" class="no-tasks-message">Nenhuma tarefa registrada.</p>
 
 
-    <!-- Lista de tarefas paginada -->
     <ul class="task-list" *ngIf="tasks.length > 0">
-      <li
-        class="task-item"
-        *ngFor="let task of paginatedTasks"
-        [ngClass]="{'completed': task.completed}"
-      >
+      <li class="task-item" *ngFor="let task of paginatedTasks" [ngClass]="{'completed': task.completed}">
         <div class="task-content">
           <span class="task-title">{{ task.title }}</span>
           <p class="task-description">{{ task.description }}</p>
@@ -24,34 +18,41 @@
           <button class="btn-complete" (click)="completeTask(task)">
             {{ task.completed ? 'Concluído' : 'Concluir' }}
           </button>
-          <button class="btn-edit" (click)="editTask(task)" [disabled]="task.completed">Editar</button>
+          <button class="btn-edit" (click)="openModal(taskModal, true, task)" [disabled]="task.completed">Editar</button>
           <button class="btn-remove" (click)="removeTask(task)">Remover</button>
         </div>
       </li>
     </ul>
 
-    <!-- Controles de paginação -->
+    
     <div class="pagination" *ngIf="tasks.length > 0">
       <button (click)="previousPage()" [disabled]="currentPage === 1">Anterior</button>
       <span>Página {{ currentPage }} de {{ totalPages }}</span>
       <button (click)="nextPage()" [disabled]="currentPage === totalPages">Próxima</button>
     </div>
 
-    <!-- Modal para adicionar nova tarefa -->
-    <div class="modal" [class.open]="isModalOpen">
-      <div class="modal-content">
-        <h3> Tarefa</h3>
-        <form [formGroup]="modalForm" (ngSubmit)="addTask()">
+    
+    <ng-template #taskModal let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{ isEditMode ? 'Editar Tarefa' : 'Adicionar Tarefa' }}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="modalForm" (ngSubmit)="addTask(modal)">
           <div class="form-group">
-            <input formControlName="taskTitle" type="text" placeholder="Título da Tarefa" />
+            <input formControlName="taskTitle" type="text" placeholder="Título da Tarefa" class="form-control" />
           </div>
           <div class="form-group">
-            <textarea formControlName="taskDescription" placeholder="Descrição da Tarefa"></textarea>
+            <textarea formControlName="taskDescription" placeholder="Descrição da Tarefa" class="form-control"></textarea>
           </div>
-          <button type="submit" [disabled]="modalForm.invalid">Adicionar</button>
-          <button type="button" (click)="closeModal()">Cancelar</button>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" [disabled]="modalForm.invalid">{{ isEditMode ? 'Salvar' : 'Adicionar' }}</button>
+            <button type="button" class="btn btn-secondary" (click)="modal.dismiss('cancel click')">Cancelar</button>
+          </div>
         </form>
       </div>
-    </div>
+    </ng-template>
   </div>
 </div>

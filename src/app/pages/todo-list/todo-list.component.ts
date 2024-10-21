@@ -1,7 +1,8 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { BsModalService, BsModalRef, ModalModule } from 'ngx-bootstrap/modal';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 export interface Task {
   title: string;
@@ -14,7 +15,7 @@ export interface Task {
   selector: 'app-todo-list',
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.scss'],
-  imports: [ReactiveFormsModule, CommonModule, ModalModule]
+  imports: [ReactiveFormsModule, CommonModule]
 })
 export class TodoListComponent implements OnInit {
   tasks: Task[] = [];
@@ -22,13 +23,12 @@ export class TodoListComponent implements OnInit {
   currentPage = 1;
   itemsPerPage = 5;
   totalPages = 1;
-  modalRef?: BsModalRef;
   isEditMode = false;
   taskBeingEdited: Task | null = null;
 
   modalForm!: FormGroup;
 
-  constructor(private modalService: BsModalService) {}
+  constructor(private modalService: NgbModal, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.modalForm = new FormGroup({
@@ -39,19 +39,30 @@ export class TodoListComponent implements OnInit {
     this.updatePagination();
   }
 
-  openModal(template: TemplateRef<any>) {
-    this.isEditMode = false;
-    this.modalForm.reset();
-    this.modalRef = this.modalService.show(template);
-  }
+  // Abre o modal usando NgbModal
+  openModal(content: TemplateRef<any>, isEditMode = false, task: Task | null = null) {
+    this.isEditMode = isEditMode;
 
-  closeModal() {
-    if (this.modalRef) {
-      this.modalRef.hide();
+    if (task) {
+      this.taskBeingEdited = task;
+      this.modalForm.setValue({
+        taskTitle: task.title,
+        taskDescription: task.description
+      });
+    } else {
+      this.modalForm.reset();
     }
+
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
-  addTask() {
+  // Fecha o modal (chamado internamente pelo NgbModal)
+  closeModal(modal: any) {
+    modal.close();
+  }
+
+  // Adiciona uma nova tarefa ou salva a edição
+  addTask(modal: any) {
     if (this.modalForm.valid) {
       const newTaskTitle = this.modalForm.get('taskTitle')?.value;
       const newTaskDescription = this.modalForm.get('taskDescription')?.value;
@@ -65,23 +76,12 @@ export class TodoListComponent implements OnInit {
       }
 
       this.modalForm.reset();
-      this.closeModal();
+      this.closeModal(modal);
       this.updatePagination();
     }
   }
 
-  editTask(task: Task, template: TemplateRef<any>) {
-    this.isEditMode = true;
-    this.taskBeingEdited = task;
-
-    this.modalForm.setValue({
-      taskTitle: task.title,
-      taskDescription: task.description
-    });
-
-    this.modalRef = this.modalService.show(template);
-  }
-
+  // Paginação
   updatePagination() {
     this.totalPages = Math.ceil(this.tasks.length / this.itemsPerPage);
     const start = (this.currentPage - 1) * this.itemsPerPage;
