@@ -49,12 +49,15 @@
   min-height: 150px;
   position: relative;
   display: flex;
-  transition: background-color 0.3s ease; /* Transição suave para mudança de cor */
+  transition: background-color 0.3s ease; 
 
   &.completed {
-    background-color: darken(#6a0dad, 20%); /* Mais escuro ao ser concluído */
-    text-decoration: line-through; /* Estilo riscado para texto */
+    background-color: darken(#6a0dad, 25%);
   }
+}
+
+.completed-action {
+  text-decoration: line-through; 
 }
 
 .btn-add-task {

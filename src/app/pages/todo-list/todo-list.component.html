@@ -2,7 +2,7 @@
   <div class="todo-box">
     <h2 class="todo-title">Lista de Tarefas</h2>
 
-    <button class="btn btn-add-task" (click)="openModal(taskModal)">Adicionar Tarefa</button>
+    <button class="btn btn-add-task" (click)="instanceTask(taskModal)">Adicionar Tarefa</button>
 
     <h3 *ngIf="tasks.length === 0" class="no-tasks-message">Nenhuma tarefa registrada.</h3>
 
@@ -14,10 +14,10 @@
         </div>
         <div class="task-actions">
           <button class="btn-complete" (click)="completeTask(task)">
-            {{ task.completed ? 'Concluído' : 'Concluir' }}
+            {{ task.completed ? 'Reabrir' : 'Concluir' }}
           </button>
-          <button class="btn-edit" (click)="openModal(taskModal, true, task)" [disabled]="task.completed">Editar</button>
-          <button class="btn-remove" (click)="removeTask(task)">Remover</button>
+          <button class="btn-edit" [ngClass]="{'completed-action': task.completed}" (click)="instanceTask(taskModal, true, task)" [disabled]="task.completed">Editar</button>
+          <button class="btn-remove" [ngClass]="{'completed-action': task.completed}" (click)="removeTask(task)">Remover</button>
         </div>
       </li>
     </ul>

@@ -39,8 +39,11 @@ export class TodoListComponent implements OnInit {
     this.updatePagination();
   }
 
-  // Abre o modal usando NgbModal
-  openModal(content: TemplateRef<any>, isEditMode = false, task: Task | null = null) {
+  instanceTask(content: TemplateRef<any>, isEditMode = false, task: Task | null = null) {
+    if(task?.completed){
+      return
+    }
+    
     this.isEditMode = isEditMode;
 
     if (task) {
@@ -52,7 +55,10 @@ export class TodoListComponent implements OnInit {
     } else {
       this.modalForm.reset();
     }
-
+    this.openModal(content);
+  }
+  
+  openModal(content: TemplateRef<any>){
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
@@ -108,6 +114,10 @@ export class TodoListComponent implements OnInit {
   }
 
   removeTask(task: Task) {
+    if(task?.completed){
+      return
+    }
+    
     this.tasks = this.tasks.filter(t => t !== task);
     this.updatePagination();
   }
