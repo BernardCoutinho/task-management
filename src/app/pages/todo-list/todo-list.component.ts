@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { BsModalService, BsModalRef, ModalModule } from 'ngx-bootstrap/modal';
 import { CommonModule } from '@angular/common';
 
 export interface Task {
@@ -13,7 +14,7 @@ export interface Task {
   selector: 'app-todo-list',
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.scss'],
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [ReactiveFormsModule, CommonModule, ModalModule]
 })
 export class TodoListComponent implements OnInit {
   tasks: Task[] = [];
@@ -21,12 +22,13 @@ export class TodoListComponent implements OnInit {
   currentPage = 1;
   itemsPerPage = 5;
   totalPages = 1;
-  isModalOpen = false;
-  isEditMode = false; // Para controlar se o modal está em modo de edição
-  taskBeingEdited: Task | null = null; // Para manter a referência da tarefa que está sendo editada
+  modalRef?: BsModalRef;
+  isEditMode = false;
+  taskBeingEdited: Task | null = null;
 
-  // Formulário para adicionar/editar tarefas no modal
   modalForm!: FormGroup;
+
+  constructor(private modalService: BsModalService) {}
 
   ngOnInit() {
     this.modalForm = new FormGroup({
@@ -37,31 +39,28 @@ export class TodoListComponent implements OnInit {
     this.updatePagination();
   }
 
-  // Abre o modal para adição de tarefa
-  openModal() {
-    this.isEditMode = false; // Não estamos editando uma tarefa
+  openModal(template: TemplateRef<any>) {
+    this.isEditMode = false;
     this.modalForm.reset();
-    this.isModalOpen = true;
+    this.modalRef = this.modalService.show(template);
   }
 
-  // Fecha o modal
   closeModal() {
-    this.isModalOpen = false;
+    if (this.modalRef) {
+      this.modalRef.hide();
+    }
   }
 
-  // Adiciona uma nova tarefa ou salva a edição
   addTask() {
     if (this.modalForm.valid) {
       const newTaskTitle = this.modalForm.get('taskTitle')?.value;
       const newTaskDescription = this.modalForm.get('taskDescription')?.value;
 
       if (this.isEditMode && this.taskBeingEdited) {
-        // Se estamos no modo de edição, apenas atualizamos a tarefa
         this.taskBeingEdited.title = newTaskTitle;
         this.taskBeingEdited.description = newTaskDescription;
         this.taskBeingEdited = null;
       } else {
-        // Se não estamos editando, é uma nova tarefa
         this.tasks.push({ title: newTaskTitle, description: newTaskDescription, completed: false });
       }
 
@@ -71,21 +70,18 @@ export class TodoListComponent implements OnInit {
     }
   }
 
-  // Função de edição da tarefa
-  editTask(task: Task) {
-    this.isEditMode = true; // Estamos em modo de edição
-    this.taskBeingEdited = task; // Definimos a tarefa que está sendo editada
+  editTask(task: Task, template: TemplateRef<any>) {
+    this.isEditMode = true;
+    this.taskBeingEdited = task;
 
-    // Preenche o modal com os valores da tarefa existente
     this.modalForm.setValue({
       taskTitle: task.title,
       taskDescription: task.description
     });
 
-    this.isModalOpen = true; // Abre o modal para edição
+    this.modalRef = this.modalService.show(template);
   }
 
-  // Paginação
   updatePagination() {
     this.totalPages = Math.ceil(this.tasks.length / this.itemsPerPage);
     const start = (this.currentPage - 1) * this.itemsPerPage;
@@ -107,12 +103,10 @@ export class TodoListComponent implements OnInit {
     }
   }
 
-  // Completar tarefa
   completeTask(task: Task) {
     task.completed = !task.completed;
   }
 
-  // Remover tarefa
   removeTask(task: Task) {
     this.tasks = this.tasks.filter(t => t !== task);
     this.updatePagination();

@@ -1,12 +1,13 @@
 <div class="todo-container">
-  <div class="todo-box">
+  <div class="todo-box ali">
     <h2>Lista de Tarefas</h2>
+ 
+    <!-- Botão para abrir o modal de adição de tarefa -->
+    <button class="btn btn-add-task" (click)="openModal()">Adicionar Nova Tarefa</button>
 
     <!-- Exibir mensagem se não houver tarefas -->
     <p *ngIf="tasks.length === 0" class="no-tasks-message">Nenhuma tarefa registrada.</p>
 
-    <!-- Botão para abrir o modal de adição de tarefa -->
-    <button class="btn-add-task" (click)="openModal()">Adicionar Nova Tarefa</button>
 
     <!-- Lista de tarefas paginada -->
     <ul class="task-list" *ngIf="tasks.length > 0">
@@ -39,7 +40,7 @@
     <!-- Modal para adicionar nova tarefa -->
     <div class="modal" [class.open]="isModalOpen">
       <div class="modal-content">
-        <h3>Adicionar Tarefa</h3>
+        <h3> Tarefa</h3>
         <form [formGroup]="modalForm" (ngSubmit)="addTask()">
           <div class="form-group">
             <input formControlName="taskTitle" type="text" placeholder="Título da Tarefa" />
