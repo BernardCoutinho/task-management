@@ -1,12 +1,17 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { SignIn } from '../models/signIn.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private router: Router) {}
+  private baseUrl = 'https://localhost:7049/api/User'; 
+
+  constructor(private http: HttpClient, private router: Router) {}
 
   // Verifica se o usuário está logado
   isLoggedIn(): boolean {
@@ -30,17 +35,8 @@ export class AuthService {
     }
   }
 
-  register(username: string, password: string): void {
-
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const newUser = { username, password };
-    users.push(newUser);
-
-    // Atualiza os usuários no localStorage
-    localStorage.setItem('users', JSON.stringify(users));
-
-    // Após registrar o usuário, realiza o login automaticamente
-    localStorage.setItem('token', 'mock-jwt-token');
-    this.router.navigate(['/todo-list']);
+  register(signIn: SignIn): Observable<any> {
+    const userRequest = signIn;
+    return this.http.post(`${this.baseUrl}`, userRequest);
   }
 }

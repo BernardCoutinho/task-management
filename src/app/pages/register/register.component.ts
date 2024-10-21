@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';  
 import { Router } from '@angular/router';
+import { SignIn } from '../../models/signIn.model';
 
 @Component({
   standalone: true,
@@ -22,7 +23,7 @@ export class RegisterComponent implements OnInit {
   // Função para criar o FormGroup
   private initRegisterForm(): void {
   this.registerForm = new FormGroup({
-    username: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     confirmPassword: new FormControl('', [Validators.required])
   }, { validators: this.passwordsMatchValidator });  
@@ -37,16 +38,29 @@ export class RegisterComponent implements OnInit {
   return password === confirmPassword ? null : { passwordsDoNotMatch: true };
 };
 
-  // Método de registro que chama o serviço de autenticação
-  register(): void {
-    this.registerForm.markAllAsTouched();
-    if (this.registerForm.valid) {
-      const { username, password } = this.registerForm.value;
-      this.authService.register(username, password);
-    } else {
-      alert('Por favor, preencha todos os campos corretamente.');
-    }
+register(): void {
+  this.registerForm.markAllAsTouched();
+  if (this.registerForm.valid) {
+    const signIn: SignIn = {
+      username: this.registerForm.get('email')?.value,
+      email: this.registerForm.get('email')?.value,
+      password: this.registerForm.get('password')?.value
+    };
+    
+    this.authService.register(signIn).subscribe({
+      next: (response) => {
+        console.log('Registro bem-sucedido:', response);
+        this.router.navigate(['/todo-list']); 
+      },
+      error: (err) => {
+        console.error('Erro ao registrar:', err);
+        alert('Ocorreu um erro ao registrar o usuário. Tente novamente.');
+      }
+    });
+  } else {
+    alert('Por favor, preencha todos os campos corretamente.');
   }
+}
 
   // Navega de volta para a página de login
   navigateToLogin() {

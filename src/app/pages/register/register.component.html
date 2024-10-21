@@ -3,13 +3,13 @@
       <h2 class="text-center mb-4">Registrar</h2>
   
       <!-- Formulário de registro -->
-      <form (submit)="register()">
+      <form [formGroup]="registerForm" (submit)="register()">
         <div class="form-group mb-3">
           <input
             type="text"
             class="form-control"
-            placeholder="Usuário"
-            formControlName="username"
+            placeholder="Email"
+            formControlName="email"
           />
         </div>
         <div class="form-group mb-3">
