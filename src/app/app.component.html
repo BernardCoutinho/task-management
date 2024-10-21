@@ -1,21 +1,52 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Minha App</a>
+    <a class="navbar-brand" href="#">Gerenciador de Tarefas</a>
 
-    <!-- Alinha as opções à esquerda -->
-    <div class="collapse navbar-collapse">
+    <!-- Botão de navegação responsivo -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Itens da barra de navegação -->
+    <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <!-- Se o usuário não estiver logado, mostrar Login e Registrar -->
-        <li class="nav-item" *ngIf="!isLoggedIn()">
-          <a class="nav-link" routerLink="/">Login</a>
-        </li>
-        <li class="nav-item" *ngIf="!isLoggedIn()">
-          <a class="nav-link" routerLink="/register">Registrar</a>
-        </li>
-
-        <!-- Se o usuário estiver logado, mostrar Lista de Tarefas e Sair -->
+        <!-- Se o usuário estiver logado, mostrar Lista de Tarefas -->
         <li class="nav-item" *ngIf="isLoggedIn()">
-          <a class="nav-link" routerLink="/todo-list">Lista de Tarefas</a>
+          <a
+            class="nav-link"
+            routerLink="/todo-list"
+            routerLinkActive="active"
+            >Lista de Tarefas</a
+          >
+        </li>
+      </ul>
+
+      <!-- Mover o item "Sair" para o lado direito -->
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item" *ngIf="!isLoggedIn()">
+          <a
+            class="nav-link"
+            routerLink="/"
+            routerLinkActive="active"
+            aria-current="page"
+            >Login</a
+          >
+        </li>
+        <li class="nav-item" *ngIf="!isLoggedIn()">
+          <a
+            class="nav-link"
+            routerLink="/register"
+            routerLinkActive="active"
+            >Registrar</a
+          >
         </li>
         <li class="nav-item" *ngIf="isLoggedIn()">
           <a class="nav-link" (click)="logout()">Sair</a>

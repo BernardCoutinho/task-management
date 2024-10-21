@@ -1,11 +1,10 @@
 <div class="todo-container">
-  <div class="todo-box ali">
+  <div class="todo-box">
     <h2>Lista de Tarefas</h2>
 
-    <button class="btn btn-add-task" (click)="openModal(taskModal)">Adicionar Nova Tarefa</button>
+    <button class="btn btn-add-task" (click)="openModal(taskModal)">Adicionar Tarefa</button>
 
-    <!-- Exibir mensagem se não houver tarefas -->
-    <p *ngIf="tasks.length === 0" class="no-tasks-message">Nenhuma tarefa registrada.</p>
+    <h3 *ngIf="tasks.length === 0" class="no-tasks-message">Nenhuma tarefa registrada.</h3>
 
 
     <ul class="task-list" *ngIf="tasks.length > 0">
@@ -32,11 +31,12 @@
     </div>
 
     
+    <!-- Modal Template -->
     <ng-template #taskModal let-modal>
       <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">{{ isEditMode ? 'Editar Tarefa' : 'Adicionar Tarefa' }}</h4>
         <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true">&times;</span> <!-- Apenas o ícone de X branco -->
         </button>
       </div>
       <div class="modal-body">
@@ -48,8 +48,8 @@
             <textarea formControlName="taskDescription" placeholder="Descrição da Tarefa" class="form-control"></textarea>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" [disabled]="modalForm.invalid">{{ isEditMode ? 'Salvar' : 'Adicionar' }}</button>
             <button type="button" class="btn btn-secondary" (click)="modal.dismiss('cancel click')">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="modalForm.invalid">{{ isEditMode ? 'Salvar' : 'Adicionar' }}</button>
           </div>
         </form>
       </div>
