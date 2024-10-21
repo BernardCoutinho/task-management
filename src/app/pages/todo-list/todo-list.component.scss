@@ -17,6 +17,10 @@
   width: 100%; 
   min-height: 500px;
 }
+ 
+.todo-title {
+  text-align: center;
+}
 
 .no-tasks-message {
   text-align: center; 
@@ -52,29 +56,6 @@
     text-decoration: line-through; /* Estilo riscado para texto */
   }
 }
-
-// .task-content {
-//   flex-grow: 1;
-//   overflow-y: auto;
-//   margin-bottom: 1rem;
-// }
-
-// .task-title, .task-description {
-//   font-size: 1.5rem;
-//   word-wrap: break-word; 
-//   max-height: 4.5rem; 
-//   overflow-y: auto; 
-// }
-
-// .task-description {
-//   font-size: 1rem;
-//   color: rgba(255, 255, 255, 0.8);
-//   margin-bottom: 1rem;
-// }
-
-
-
-
 
 .btn-add-task {
   background-color: #6a0dad;

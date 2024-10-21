@@ -1,11 +1,10 @@
 <div class="todo-container">
   <div class="todo-box">
-    <h2>Lista de Tarefas</h2>
+    <h2 class="todo-title">Lista de Tarefas</h2>
 
     <button class="btn btn-add-task" (click)="openModal(taskModal)">Adicionar Tarefa</button>
 
     <h3 *ngIf="tasks.length === 0" class="no-tasks-message">Nenhuma tarefa registrada.</h3>
-
 
     <ul class="task-list" *ngIf="tasks.length > 0">
       <li class="task-item" *ngFor="let task of paginatedTasks" [ngClass]="{'completed': task.completed}">
