@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms'; // Importações necessárias
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { LogIn } from '../../models/logIn.model';
 
 
 @Component({
@@ -35,14 +36,17 @@ export class LoginComponent implements OnInit {
       const username = this.loginForm.get('username')?.value;
       const password = this.loginForm.get('password')?.value;
 
-      const success = this.authService.login(username, password);  // Chama o serviço de login
-
-      if (!success) {
-        alert('Usuário ou senha inválidos');
-        return
-      }
-
-      this.router.navigate(['/todo-list']);
+      // Esperar pela resposta da requisição de login antes de continuar
+      this.authService.login(username, password).subscribe({
+        next: (response) => {
+          // Se o login for bem-sucedido, armazena o token e navega
+          this.router.navigate(['/todo-list']);
+        },
+        error: (err) => {
+          console.error('Login failed:', err);
+          alert('Usuário ou senha inválidos');
+        }
+      });
     } else {
       alert('Por favor, preencha os campos obrigatórios.');
     }

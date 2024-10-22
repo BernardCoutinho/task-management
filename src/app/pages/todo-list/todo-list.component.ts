@@ -3,12 +3,9 @@ import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angula
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-
-export interface Task {
-  title: string;
-  description: string;
-  completed: boolean;
-}
+import { TaskService } from '../../services/task.service';
+import { Task } from '../../models/task.model';
+import { TaskRequest } from '../../models/taskRequest.model';
 
 @Component({
   standalone: true,
@@ -28,14 +25,14 @@ export class TodoListComponent implements OnInit {
 
   modalForm!: FormGroup;
 
-  constructor(private modalService: NgbModal, private route: ActivatedRoute) {}
+  constructor(private taskService: TaskService, private modalService: NgbModal, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.modalForm = new FormGroup({
       taskTitle: new FormControl('', [Validators.required]),
       taskDescription: new FormControl('', [Validators.required]),
     });
-
+    this.loadTasks()
     this.updatePagination();
   }
 
@@ -68,23 +65,60 @@ export class TodoListComponent implements OnInit {
   }
 
   // Adiciona uma nova tarefa ou salva a edição
+  oadTasks() {
+    this.taskService.getTasks().subscribe((data) => {
+      this.tasks = data;
+      this.updatePagination();
+    });
+  }
+
+  loadTasks() {
+    this.taskService.getTasks().subscribe((data) => {
+      this.tasks = data;
+      debugger
+      this.updatePagination();
+    });
+  }
+
   addTask(modal: any) {
     if (this.modalForm.valid) {
-      const newTaskTitle = this.modalForm.get('taskTitle')?.value;
-      const newTaskDescription = this.modalForm.get('taskDescription')?.value;
+      const newTask: TaskRequest = {
+        userId: 1,
+        title: this.modalForm.get('taskTitle')?.value,
+        description: this.modalForm.get('taskDescription')?.value,
+        completed: false
+      };
 
+      debugger
       if (this.isEditMode && this.taskBeingEdited) {
-        this.taskBeingEdited.title = newTaskTitle;
-        this.taskBeingEdited.description = newTaskDescription;
-        this.taskBeingEdited = null;
+        newTask.id = this.taskBeingEdited.id;
+        this.taskService.updateTask(newTask).subscribe(() => {
+          this.loadTasks(); 
+        });
       } else {
-        this.tasks.push({ title: newTaskTitle, description: newTaskDescription, completed: false });
+        this.taskService.addTask(newTask).subscribe(() => {
+          this.loadTasks();  // Recarregar tasks
+        });
       }
 
-      this.modalForm.reset();
       this.closeModal(modal);
       this.updatePagination();
     }
+  }
+
+  removeTask(task: Task) {
+    if(task.id){
+      this.taskService.removeTask(task.id).subscribe(() => {
+        this.loadTasks();  // Recarregar tasks
+      });
+    }
+  }
+
+  completeTask(task: Task) {
+    task.completed = !task.completed;
+    this.taskService.updateTask(task).subscribe(() => {
+      this.loadTasks();  // Recarregar tasks
+    });
   }
 
   // Paginação
@@ -109,16 +143,16 @@ export class TodoListComponent implements OnInit {
     }
   }
 
-  completeTask(task: Task) {
-    task.completed = !task.completed;
-  }
+  // completeTask(task: Task) {
+  //   task.completed = !task.completed;
+  // }
 
-  removeTask(task: Task) {
-    if(task?.completed){
-      return
-    }
+  // removeTask(task: Task) {
+  //   if(task?.completed){
+  //     return
+  //   }
     
-    this.tasks = this.tasks.filter(t => t !== task);
-    this.updatePagination();
-  }
+  //   this.tasks = this.tasks.filter(t => t !== task);
+  //   this.updatePagination();
+  // }
 }

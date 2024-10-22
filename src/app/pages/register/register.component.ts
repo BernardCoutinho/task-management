@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';  
 import { Router } from '@angular/router';
-import { SignIn } from '../../models/signIn.model';
 
 @Component({
   standalone: true,
@@ -17,7 +16,7 @@ export class RegisterComponent implements OnInit {
   constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.initRegisterForm();  // Inicializar o formulário
+    this.initRegisterForm();  
   }
 
   // Função para criar o FormGroup
@@ -41,16 +40,16 @@ export class RegisterComponent implements OnInit {
 register(): void {
   this.registerForm.markAllAsTouched();
   if (this.registerForm.valid) {
-    const signIn: SignIn = {
-      username: this.registerForm.get('email')?.value,
-      email: this.registerForm.get('email')?.value,
-      password: this.registerForm.get('password')?.value
-    };
     
-    this.authService.register(signIn).subscribe({
+      const username = this.registerForm.get('email')?.value
+      const email = this.registerForm.get('email')?.value
+      const password = this.registerForm.get('password')?.value
+    
+    
+    this.authService.register(username, email, password).subscribe({
       next: (response) => {
         console.log('Registro bem-sucedido:', response);
-        this.router.navigate(['/todo-list']); 
+        this.navigateToLogin(); 
       },
       error: (err) => {
         console.error('Erro ao registrar:', err);
@@ -62,7 +61,6 @@ register(): void {
   }
 }
 
-  // Navega de volta para a página de login
   navigateToLogin() {
     this.router.navigate(['/login']);
   }

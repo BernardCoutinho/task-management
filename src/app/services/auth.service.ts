@@ -1,42 +1,55 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { SignIn } from '../models/signIn.model';
+import { LogIn } from '../models/logIn.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private baseUrl = 'https://localhost:7049/api/User'; 
+  private readonly BASE_URL = 'https://localhost:7049/api'; 
+  
+  private readonly USER = this.BASE_URL + '/user'; 
+
+  private readonly AUTH = this.BASE_URL + '/auth'; 
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  // Verifica se o usuário está logado
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');  // Retorna true se o token existir
+    return !!localStorage.getItem('token');  
   }
 
-  // Realiza logout removendo o token
+
   logout(): void {
-    localStorage.removeItem('token');  // Remove o token de login
-    this.router.navigate(['/']);  // Redireciona para a página de login
+    localStorage.removeItem('token');  
+    this.router.navigate(['/']);  
   }
 
-  // Mock de login para testes
-  login(username: string, password: string): boolean {
-    // Simulação de login bem-sucedido
-    if (username === 'user' && password === 'password') {
-      localStorage.setItem('token', 'mock-jwt-token');
-      return true;
-    } else {
-      return false;  // Retorna false se as credenciais estiverem erradas
+ 
+  login(username: string, password: string): Observable<any> {
+    const loginRequest: LogIn = {
+      username,
+      password
     }
+
+    return this.http.post(`${this.AUTH}/login`, loginRequest).pipe(
+      tap((response: any) => {
+        if (response && response.token) {
+          localStorage.setItem('token', response.token);
+        }
+      })
+    );
   }
 
-  register(signIn: SignIn): Observable<any> {
-    const userRequest = signIn;
-    return this.http.post(`${this.baseUrl}`, userRequest);
+  register(username: string, email: string, password: string): Observable<any> {
+    const signIn: SignIn = {
+      username,
+      email,
+      password
+    };
+    return this.http.post(`${this.USER}`, signIn);
   }
 }
