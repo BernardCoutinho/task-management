@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Task } from '../models/task.model';
+import { PagedResult } from '../models/PagedResult.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +15,12 @@ export class TaskService {
 
   constructor(private http: HttpClient) {}
 
-  getTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>(this.TASK);
+  getTasks(pageNumber: number, pageSize: number): Observable<PagedResult<Task>> {
+    let params = new HttpParams()
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+
+    return this.http.get<PagedResult<Task>>(this.TASK, { params });
   }
 
   addTask(task: Task): Observable<Task> {

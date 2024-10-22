@@ -4,10 +4,10 @@
 
     <button class="btn btn-add-task" (click)="instanceTask(taskModal)">Adicionar Tarefa</button>
 
-    <h3 *ngIf="tasks.length === 0" class="no-tasks-message">Nenhuma tarefa registrada.</h3>
+    <h3 *ngIf="!paginatedTasks || paginatedTasks.items.length === 0" class="no-tasks-message">Nenhuma tarefa registrada.</h3>
 
-    <ul class="task-list" *ngIf="tasks.length > 0">
-      <li class="task-item" *ngFor="let task of paginatedTasks" [ngClass]="{'completed': task.completed}">
+    <ul class="task-list" *ngIf="paginatedTasks && paginatedTasks.items.length > 0">
+      <li class="task-item" *ngFor="let task of paginatedTasks.items" [ngClass]="{'completed': task.completed}">
         <div class="task-content">
           <span class="task-title">{{ task.title }}</span>
           <p class="task-description">{{ task.description }}</p>
@@ -23,7 +23,7 @@
     </ul>
 
     
-    <div class="pagination" *ngIf="tasks.length > 0">
+    <div class="pagination" *ngIf="paginatedTasks.items.length > 0">
       <button (click)="previousPage()" [disabled]="currentPage === 1">Anterior</button>
       <span>Página {{ currentPage }} de {{ totalPages }}</span>
       <button (click)="nextPage()" [disabled]="currentPage === totalPages">Próxima</button>

@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TaskService } from '../../services/task.service';
 import { Task } from '../../models/task.model';
 import { TaskRequest } from '../../models/taskRequest.model';
+import { PagedResult } from '../../models/PagedResult.model';
 
 @Component({
   standalone: true,
@@ -15,8 +16,7 @@ import { TaskRequest } from '../../models/taskRequest.model';
   imports: [ReactiveFormsModule, CommonModule]
 })
 export class TodoListComponent implements OnInit {
-  tasks: Task[] = [];
-  paginatedTasks: Task[] = [];
+  paginatedTasks!: PagedResult<Task>;
   currentPage = 1;
   itemsPerPage = 5;
   totalPages = 1;
@@ -65,18 +65,10 @@ export class TodoListComponent implements OnInit {
   }
 
   // Adiciona uma nova tarefa ou salva a edição
-  oadTasks() {
-    this.taskService.getTasks().subscribe((data) => {
-      this.tasks = data;
-      this.updatePagination();
-    });
-  }
-
   loadTasks() {
-    this.taskService.getTasks().subscribe((data) => {
-      this.tasks = data;
-      debugger
-      this.updatePagination();
+    this.taskService.getTasks(this.currentPage, this.itemsPerPage).subscribe((data: PagedResult<Task>) => {
+      this.paginatedTasks = data;
+      this.totalPages = Math.ceil(this.paginatedTasks.totalItems / this.itemsPerPage);
     });
   }
 
@@ -89,8 +81,8 @@ export class TodoListComponent implements OnInit {
         completed: false
       };
 
-      debugger
       if (this.isEditMode && this.taskBeingEdited) {
+        debugger
         newTask.id = this.taskBeingEdited.id;
         this.taskService.updateTask(newTask).subscribe(() => {
           this.loadTasks(); 
@@ -123,36 +115,20 @@ export class TodoListComponent implements OnInit {
 
   // Paginação
   updatePagination() {
-    this.totalPages = Math.ceil(this.tasks.length / this.itemsPerPage);
-    const start = (this.currentPage - 1) * this.itemsPerPage;
-    const end = start + this.itemsPerPage;
-    this.paginatedTasks = this.tasks.slice(start, end);
+    this.totalPages = Math.ceil(this.paginatedTasks.totalItems / this.itemsPerPage); 
   }
 
   previousPage() {
     if (this.currentPage > 1) {
       this.currentPage--;
-      this.updatePagination();
+      this.loadTasks();  
     }
   }
-
+  
   nextPage() {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.updatePagination();
+      this.loadTasks();  
     }
   }
-
-  // completeTask(task: Task) {
-  //   task.completed = !task.completed;
-  // }
-
-  // removeTask(task: Task) {
-  //   if(task?.completed){
-  //     return
-  //   }
-    
-  //   this.tasks = this.tasks.filter(t => t !== task);
-  //   this.updatePagination();
-  // }
 }
