@@ -114,7 +114,7 @@ export class TodoListComponent implements OnInit {
 
   // Paginação
   updatePagination() {
-    this.totalPages = Math.ceil(this.paginatedTasks.totalItems / this.itemsPerPage); 
+    this.totalPages = Math.ceil(this.paginatedTasks?.totalItems / this.itemsPerPage); 
   }
 
   previousPage() {

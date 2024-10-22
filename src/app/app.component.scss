@@ -34,5 +34,8 @@
       padding-top: 70px; /* Ajusta conforme a altura da navbar */
       min-height: calc(100vh - 70px);
     }
+    .nav-item{
+        cursor: pointer;
+    }
   }
   
