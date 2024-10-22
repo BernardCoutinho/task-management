@@ -18,35 +18,19 @@
     <!-- Itens da barra de navegação -->
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <!-- Se o usuário estiver logado, mostrar Lista de Tarefas -->
+        <!-- Itens de navegação -->
         <li class="nav-item" *ngIf="isLoggedIn()">
-          <a
-            class="nav-link"
-            routerLink="/todo-list"
-            routerLinkActive="active"
-            >Lista de Tarefas</a
-          >
+          <a class="nav-link" routerLink="/todo-list" routerLinkActive="active">Lista de Tarefas</a>
         </li>
       </ul>
 
-      <!-- Mover o item "Sair" para o lado direito -->
+      <!-- Botão de Logout -->
       <ul class="navbar-nav ms-auto">
         <li class="nav-item" *ngIf="!isLoggedIn()">
-          <a
-            class="nav-link"
-            routerLink="/"
-            routerLinkActive="active"
-            aria-current="page"
-            >Login</a
-          >
+          <a class="nav-link" routerLink="/" routerLinkActive="active">Login</a>
         </li>
         <li class="nav-item" *ngIf="!isLoggedIn()">
-          <a
-            class="nav-link"
-            routerLink="/register"
-            routerLinkActive="active"
-            >Registrar</a
-          >
+          <a class="nav-link" routerLink="/register" routerLinkActive="active">Registrar</a>
         </li>
         <li class="nav-item exit" *ngIf="isLoggedIn()">
           <a class="nav-link" (click)="logout()">Sair</a>
@@ -56,4 +40,7 @@
   </div>
 </nav>
 
-<router-outlet></router-outlet>
+<!-- Container para o conteúdo da página -->
+<div class="router-outlet-container">
+  <router-outlet></router-outlet>
+</div>

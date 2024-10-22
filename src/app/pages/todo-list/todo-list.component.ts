@@ -82,7 +82,6 @@ export class TodoListComponent implements OnInit {
       };
 
       if (this.isEditMode && this.taskBeingEdited) {
-        debugger
         newTask.id = this.taskBeingEdited.id;
         this.taskService.updateTask(newTask).subscribe(() => {
           this.loadTasks(); 
@@ -99,7 +98,7 @@ export class TodoListComponent implements OnInit {
   }
 
   removeTask(task: Task) {
-    if(task.id){
+    if(task.id && !task.completed){
       this.taskService.removeTask(task.id).subscribe(() => {
         this.loadTasks();  // Recarregar tasks
       });

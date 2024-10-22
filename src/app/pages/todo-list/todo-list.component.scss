@@ -1,6 +1,6 @@
 .todo-container {
   background-color: #6a0dad;
-  height: 100vh;
+  min-height: 100vh;
   padding: 2rem;
   display: flex;
   justify-content: center;
@@ -35,6 +35,8 @@
 .task-list {
   list-style: none;
   padding: 0;
+  max-height: 55vh; 
+  overflow-y: auto; 
 }
 
 .task-item {

@@ -24,34 +24,34 @@
 
     
     <div class="pagination" *ngIf="paginatedTasks.items.length > 0">
-      <button (click)="previousPage()" [disabled]="currentPage === 1">Anterior</button>
+      <button class="btn" (click)="previousPage()" [disabled]="currentPage === 1">Anterior</button>
       <span>Página {{ currentPage }} de {{ totalPages }}</span>
-      <button (click)="nextPage()" [disabled]="currentPage === totalPages">Próxima</button>
+      <button class="btn" (click)="nextPage()" [disabled]="currentPage === totalPages">Próxima</button>
     </div>
 
     
-    <!-- Modal Template -->
-    <ng-template #taskModal let-modal>
-      <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">{{ isEditMode ? 'Editar Tarefa' : 'Adicionar Tarefa' }}</h4>
-        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-          <span aria-hidden="true">&times;</span> <!-- Apenas o ícone de X branco -->
-        </button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="modalForm" (ngSubmit)="addTask(modal)">
-          <div class="form-group">
-            <input formControlName="taskTitle" type="text" placeholder="Título da Tarefa" class="form-control" />
-          </div>
-          <div class="form-group">
-            <textarea formControlName="taskDescription" placeholder="Descrição da Tarefa" class="form-control"></textarea>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="modal.dismiss('cancel click')">Cancelar</button>
-            <button type="submit" class="btn btn-primary" [disabled]="modalForm.invalid">{{ isEditMode ? 'Salvar' : 'Adicionar' }}</button>
-          </div>
-        </form>
-      </div>
-    </ng-template>
   </div>
 </div>
+
+<ng-template #taskModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{ isEditMode ? 'Editar Tarefa' : 'Adicionar Tarefa' }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span> <!-- Apenas o ícone de X branco -->
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="modalForm" (ngSubmit)="addTask(modal)">
+      <div class="form-group">
+        <input formControlName="taskTitle" type="text" placeholder="Título da Tarefa" class="form-control" />
+      </div>
+      <div class="form-group">
+        <textarea formControlName="taskDescription" placeholder="Descrição da Tarefa" class="form-control"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss('cancel click')">Cancelar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="modalForm.invalid">{{ isEditMode ? 'Salvar' : 'Adicionar' }}</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
