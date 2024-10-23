@@ -3,19 +3,22 @@ import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms'; // Importações necessárias
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
-
+import { ToastrModule, ToastrService, IndividualConfig  } from 'ngx-toastr';
 @Component({
   standalone: true,
   selector: 'app-login',
   styleUrl: './login.component.scss',
   templateUrl: './login.component.html',
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [ReactiveFormsModule, CommonModule, ToastrModule]
 })
 export class LoginComponent implements OnInit {
 
   loginForm!: FormGroup;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router, 
+    private authService: AuthService,
+    private toastrService: ToastrService) {}
 
   ngOnInit(): void {
     this.initLoginForm()
@@ -41,12 +44,11 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/todo-list']);
         },
         error: (err) => {
-          console.error('Login failed:', err);
-          alert('Usuário ou senha inválidos');
+          this.toastrService.warning(err.message, "Erro no login!")
         }
       });
     } else {
-      alert('Por favor, preencha os campos obrigatórios.');
+      this.toastrService.warning("Por favor, preencha os campos obrigatórios.", "Alerta!")
     }
   }
 

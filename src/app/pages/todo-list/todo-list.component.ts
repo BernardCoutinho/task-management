@@ -8,6 +8,7 @@ import { Task } from '../../models/task.model';
 import { TaskRequest } from '../../models/taskRequest.model';
 import { PagedResult } from '../../models/PagedResult.model';
 import { CardTaskItemComponent } from '../../components/card-task-item/card-task-item.component';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   standalone: true,
   selector: 'app-todo-list',
@@ -24,7 +25,7 @@ export class TodoListComponent implements OnInit {
 
   modalForm!: FormGroup;
 
-  constructor(private taskService: TaskService, private modalService: NgbModal, private route: ActivatedRoute) {}
+  constructor(private toastrService: ToastrService, private taskService: TaskService, private modalService: NgbModal, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.modalForm = new FormGroup({
@@ -73,6 +74,7 @@ export class TodoListComponent implements OnInit {
   }
 
   addTask(modal: any) {
+    
     if (this.modalForm.valid) {
       const newTask: TaskRequest = {
         id: this.modalForm.get('id')?.value,
@@ -81,24 +83,43 @@ export class TodoListComponent implements OnInit {
         completed: false,
         userId: this.modalForm.get('userId')?.value,
       };
-
-     
+  
+      
       if (newTask.id) {
         
-        this.taskService.updateTask(newTask).subscribe(() => {
-          this.loadTasks(); 
+        this.taskService.updateTask(newTask).subscribe({
+          next: () => {
+            this.loadTasks(); 
+            this.toastrService.success("Task atualizada com sucesso!", "Sucesso");
+          },
+          error: (err) => {
+           
+            this.toastrService.error(err.message || "Erro ao atualizar task", "Erro");
+          }
         });
       } else {
-        this.taskService.addTask(newTask).subscribe(() => {
-          this.loadTasks();  
+        
+        this.taskService.addTask(newTask).subscribe({
+          next: () => {
+            this.loadTasks(); 
+            this.toastrService.success("Task adicionada com sucesso!", "Sucesso");
+          },
+          error: (err) => {
+            
+            this.toastrService.error(err.message || "Erro ao adicionar task", "Erro");
+          }
         });
       }
-
+  
+     
       this.closeModal(modal);
-      this.updatePagination();
+      this.updatePagination(); 
+    } else {
+      
+      this.toastrService.warning("Preencha os campos obrigatórios", "Aviso");
     }
   }
-
+  
   removeTask(task: Task) {
     if(task.id && !task.completed){
       this.taskService.removeTask(task.id).subscribe(() => {
