@@ -72,7 +72,12 @@
   margin-top: 3rem;
   display: block; 
   margin-left: auto; 
-  margin-right: auto
+  margin-right: auto;
+
+  &:hover {
+    background-color: darken($primary-color, 10%);
+    color: $secondary-color;
+  }
 }
 
 .pagination {
