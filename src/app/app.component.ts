@@ -12,6 +12,8 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent {
 
+  title = "task-management"
+
   constructor(public authService: AuthService) {}  
 
   isLoggedIn(): boolean {

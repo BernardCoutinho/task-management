@@ -28,8 +28,6 @@
       <span>Página {{ currentPage }} de {{ totalPages }}</span>
       <button class="btn-pagination" (click)="nextPage()" [disabled]="currentPage === totalPages">Próxima</button>
     </div>
-
-    
   </div>
 </div>
 
@@ -37,7 +35,7 @@
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">{{ isEditMode ? 'Editar Tarefa' : 'Adicionar Tarefa' }}</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-      <span aria-hidden="true">&times;</span> <!-- Apenas o ícone de X branco -->
+      <span aria-hidden="true">&times;</span> 
     </button>
   </div>
   <div class="modal-body">

@@ -1,53 +1,52 @@
-// Variáveis SCSS
-$background-color: #6a0dad;  // Cor de fundo violeta
-$card-background-color: #fff;  // Cor de fundo do card (formulário)
-$card-border-radius: 8px;  // Arredondamento do card
-$box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);  // Sombra para o card
 
-// Mixins para reuso de código
+$background-color: #6a0dad;  
+$card-background-color: #fff;  
+$card-border-radius: 8px;  
+$box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);  
+
+
 @mixin flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-// Estilos globais para o container de login
+
 .login-container {
-  background-color: $background-color;  // Aplicando a cor de fundo
-  height: 100vh;  // Tela cheia
-  @include flex-center;  // Centralizando com o mixin flex-center
+  background-color: $background-color;  
+  height: 100vh;  
+  @include flex-center;  
 
   .login-box {
     width: 350px;
-    background-color: $card-background-color;  // Fundo branco para o card
-    border-radius: $card-border-radius;  // Arredondando as bordas do card
-    box-shadow: $box-shadow;  // Aplicando a sombra
-    padding: 2rem;  // Espaçamento interno do card
+    background-color: $card-background-color;  
+    border-radius: $card-border-radius; 
+    box-shadow: $box-shadow;  
+    padding: 2rem;  
     
     h2 {
       text-align: center;
-      margin-bottom: 1.5rem;  // Espaço abaixo do título
+      margin-bottom: 1.5rem;  
     }
 
-    // Estilos para o formulário
+  
     form {
       .form-group {
-        margin-bottom: 1rem;  // Espaçamento entre os campos
+        margin-bottom: 1rem;  
       }
 
-      // Estilos para os botões
       button {
-        width: 100%;  // Largura total para os botões
-        margin-top: 1rem;  // Espaçamento entre os botões
+        width: 100%;  
+        margin-top: 1rem;  
 
         &.btn-primary {
-          background-color: darken($background-color, 10%);  // Cor para o botão "Entrar"
-          border-color: darken($background-color, 10%);  // Borda do botão "Entrar"
+          background-color: darken($background-color, 10%);  
+          border-color: darken($background-color, 10%);  
         }
 
         &.btn-secondary {
-          background-color: lighten($background-color, 10%);  // Cor para o botão "Registrar"
-          border-color: lighten($background-color, 10%);  // Borda do botão "Registrar"
+          background-color: lighten($background-color, 10%);  
+          border-color: lighten($background-color, 10%);  
         }
       }
     }

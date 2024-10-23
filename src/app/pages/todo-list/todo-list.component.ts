@@ -59,12 +59,10 @@ export class TodoListComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
-  // Fecha o modal (chamado internamente pelo NgbModal)
   closeModal(modal: any) {
     modal.close();
   }
 
-  // Adiciona uma nova tarefa ou salva a edição
   loadTasks() {
     this.taskService.getTasks(this.currentPage, this.itemsPerPage).subscribe((data: PagedResult<Task>) => {
       this.paginatedTasks = data;
@@ -88,7 +86,7 @@ export class TodoListComponent implements OnInit {
         });
       } else {
         this.taskService.addTask(newTask).subscribe(() => {
-          this.loadTasks();  // Recarregar tasks
+          this.loadTasks();  
         });
       }
 
@@ -100,7 +98,7 @@ export class TodoListComponent implements OnInit {
   removeTask(task: Task) {
     if(task.id && !task.completed){
       this.taskService.removeTask(task.id).subscribe(() => {
-        this.loadTasks();  // Recarregar tasks
+        this.loadTasks();  
       });
     }
   }
@@ -108,11 +106,10 @@ export class TodoListComponent implements OnInit {
   completeTask(task: Task) {
     task.completed = !task.completed;
     this.taskService.updateTask(task).subscribe(() => {
-      this.loadTasks();  // Recarregar tasks
+      this.loadTasks(); 
     });
   }
 
-  // Paginação
   updatePagination() {
     this.totalPages = Math.ceil(this.paginatedTasks?.totalItems / this.itemsPerPage); 
   }
