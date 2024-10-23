@@ -7,13 +7,13 @@ import { TaskService } from '../../services/task.service';
 import { Task } from '../../models/task.model';
 import { TaskRequest } from '../../models/taskRequest.model';
 import { PagedResult } from '../../models/PagedResult.model';
-
+import { CardTaskItemComponent } from '../../components/card-task-item/card-task-item.component';
 @Component({
   standalone: true,
   selector: 'app-todo-list',
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.scss'],
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [ReactiveFormsModule, CommonModule, CardTaskItemComponent]
 })
 export class TodoListComponent implements OnInit {
   paginatedTasks!: PagedResult<Task>;
@@ -21,7 +21,7 @@ export class TodoListComponent implements OnInit {
   itemsPerPage = 5;
   totalPages = 1;
   isEditMode = false;
-  taskBeingEdited: Task | null = null;
+  //taskBeingEdited: Task | null = null;
 
   modalForm!: FormGroup;
 
@@ -29,8 +29,10 @@ export class TodoListComponent implements OnInit {
 
   ngOnInit() {
     this.modalForm = new FormGroup({
+      id: new FormControl(null),
       taskTitle: new FormControl('', [Validators.required]),
       taskDescription: new FormControl('', [Validators.required]),
+      userId: new FormControl(null)
     });
     this.loadTasks()
     this.updatePagination();
@@ -44,10 +46,12 @@ export class TodoListComponent implements OnInit {
     this.isEditMode = isEditMode;
 
     if (task) {
-      this.taskBeingEdited = task;
+      //this.taskBeingEdited = task;
       this.modalForm.setValue({
+        id: task.id,
         taskTitle: task.title,
-        taskDescription: task.description
+        taskDescription: task.description,
+        userId: task.userId
       });
     } else {
       this.modalForm.reset();
@@ -73,14 +77,15 @@ export class TodoListComponent implements OnInit {
   addTask(modal: any) {
     if (this.modalForm.valid) {
       const newTask: TaskRequest = {
-        userId: 1,
+        id: this.modalForm.get('id')?.value,
         title: this.modalForm.get('taskTitle')?.value,
         description: this.modalForm.get('taskDescription')?.value,
         completed: false
       };
 
-      if (this.isEditMode && this.taskBeingEdited) {
-        newTask.id = this.taskBeingEdited.id;
+      //if (this.isEditMode && this.taskBeingEdited) {
+      if (newTask.id) {
+        //newTask.id = this.taskBeingEdited.id;
         this.taskService.updateTask(newTask).subscribe(() => {
           this.loadTasks(); 
         });

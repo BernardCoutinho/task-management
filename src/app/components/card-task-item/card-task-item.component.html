@@ -1,0 +1,13 @@
+<div class="task-item" [ngClass]="{'completed': task.completed}">
+    <div class="task-content">
+      <span class="task-title">{{ task.title }}</span>
+      <p class="task-description">{{ task.description }}</p>
+    </div>
+    <div class="task-actions">
+      <button class="btn-complete" (click)="onCompleteTask()">
+        {{ task.completed ? 'Reabrir' : 'Concluir' }}
+      </button>
+      <button class="btn-edit" [ngClass]="{'completed-action': task.completed}" (click)="onEditTask()" [disabled]="task.completed">Editar</button>
+      <button class="btn-remove" [ngClass]="{'completed-action': task.completed}" (click)="onRemoveTask()">Remover</button>
+    </div>
+</div>

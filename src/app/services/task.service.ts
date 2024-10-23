@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Task } from '../models/task.model';
 import { PagedResult } from '../models/PagedResult.model';
+import { TaskRequest } from '../models/taskRequest.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,11 +24,11 @@ export class TaskService {
     return this.http.get<PagedResult<Task>>(this.TASK, { params });
   }
 
-  addTask(task: Task): Observable<Task> {
+  addTask(task: TaskRequest): Observable<Task> {
     return this.http.post<Task>(this.TASK, task);
   }
 
-  updateTask(task: Task): Observable<Task> {
+  updateTask(task: TaskRequest): Observable<Task> {
     return this.http.put<Task>(this.TASK, task);
   }
 
