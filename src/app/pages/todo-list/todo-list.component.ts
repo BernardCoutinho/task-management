@@ -21,7 +21,6 @@ export class TodoListComponent implements OnInit {
   itemsPerPage = 5;
   totalPages = 1;
   isEditMode = false;
-  //taskBeingEdited: Task | null = null;
 
   modalForm!: FormGroup;
 
@@ -46,7 +45,6 @@ export class TodoListComponent implements OnInit {
     this.isEditMode = isEditMode;
 
     if (task) {
-      //this.taskBeingEdited = task;
       this.modalForm.setValue({
         id: task.id,
         taskTitle: task.title,
@@ -80,12 +78,13 @@ export class TodoListComponent implements OnInit {
         id: this.modalForm.get('id')?.value,
         title: this.modalForm.get('taskTitle')?.value,
         description: this.modalForm.get('taskDescription')?.value,
-        completed: false
+        completed: false,
+        userId: this.modalForm.get('userId')?.value,
       };
 
-      //if (this.isEditMode && this.taskBeingEdited) {
+     
       if (newTask.id) {
-        //newTask.id = this.taskBeingEdited.id;
+        
         this.taskService.updateTask(newTask).subscribe(() => {
           this.loadTasks(); 
         });
