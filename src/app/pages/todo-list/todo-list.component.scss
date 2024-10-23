@@ -1,6 +1,4 @@
-$primary-color: #6a0dad;
-$secondary-color: white;
-$dark-font: rgba(black, 0.75);
+@import '../../../styles.scss';
 
 .todo-container {
   background-color: $primary-color;
@@ -14,9 +12,9 @@ $dark-font: rgba(black, 0.75);
 
 .todo-box {
   background-color: $secondary-color;
-  border-radius: 8px;
+  border-radius: $radius;
   padding: 2rem;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: $box-shadow;
   max-width: 900px; 
   width: 100%; 
   min-height: 500px;
@@ -51,7 +49,7 @@ $dark-font: rgba(black, 0.75);
   background-color: lighten($primary-color, 30%);
   padding: 1rem;
   margin-bottom: 1rem;
-  border-radius: 8px;
+  border-radius: $radius;
   color: $primary-color;
   min-height: 150px;
   position: relative;
@@ -127,15 +125,15 @@ $dark-font: rgba(black, 0.75);
 }
 
 .modal-content {
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: $radius;
+  box-shadow: $shadow-box;
   max-width: 500px;
   margin: auto;
 }
 
 .modal-footer .btn {
   padding: 0.5rem 1.5rem;
-  border-radius: 4px;
+  border-radius: $radius;
   transition: background-color 0.2s ease;
 }
 
@@ -143,30 +141,41 @@ $dark-font: rgba(black, 0.75);
   background-color: $primary-color;
   color: $secondary-color;
   border: none;
-}
 
-.btn-primary:hover {
-  background-color: darken($primary-color, 20%);
+  &:hover {
+    background-color: darken($primary-color, 20%);
+  }
+
+  &:disabled, 
+  &[disabled] {
+    background-color: $primary-color;
+    color: $secondary-color;             
+    cursor: not-allowed;        
+    opacity: 0.65;              
+  }
 }
 
 .btn-secondary {
   background-color: darken($secondary-color, 10%);
-  color: #333333;
+  color: $dark-font;
   border: none;
+
+  &:hover {
+    background-color: darken($secondary-color, 20%);
+  }
 }
 
-.btn-secondary:hover {
-  background-color: darken($secondary-color, 20%);
-}
+
 
 .btn-pagination {
   background-color: darken($secondary-color, 5%);
   color: $dark-font;
   border: none;
   padding: 10px;
-}
-.btn-pagination:hover {
-  background-color: darken($secondary-color, 20%);
+
+  &:hover {
+    background-color: darken($secondary-color, 20%);
+  }
 }
 
 .task-item {
@@ -176,7 +185,7 @@ $dark-font: rgba(black, 0.75);
   background-color: lighten($primary-color, 30%);
   padding: 1rem;
   margin-bottom: 1rem;
-  border-radius: 8px;
+  border-radius: $radius;
   color: $secondary-color;
   min-height: 150px;
   transition: background-color 0.3s ease;
@@ -211,7 +220,7 @@ $dark-font: rgba(black, 0.75);
 .task-actions button {
   flex: 1; 
   padding: 0.5rem;
-  border-radius: 4px;
+  border-radius: $radius;
   border: none;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -229,20 +238,27 @@ $dark-font: rgba(black, 0.75);
 .btn-complete {
   background-color: lighten($primary-color, 20%);
   color: $secondary-color;
+
+  &:hover {
+    background-color: lighten($primary-color, 10%);
+  }
 }
 
 .btn-edit {
   background-color: $secondary-color;
   color: $primary-color;
+
+  &:hover {
+    background-color: darken($secondary-color, 10%);
+  }
 }
 
 .btn-remove {
-  background-color: darken($primary-color, 20%);
+  background-color: darken($primary-color, 10%);
   color: $secondary-color;
+
+  &:hover {
+    background-color: darken($primary-color, 20%);
+  }
 }
 
-.btn-complete:hover,
-.btn-edit:hover,
-.btn-remove:hover {
-  opacity: 0.9; 
-}
